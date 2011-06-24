@@ -5,6 +5,8 @@
     <property name="src.dir" value="src"/>
     <property name="lib.dir" value="lib"/>
     <property name="xsl.dir" value="xsl"/>
+    <property name="dataset" value="mam6"/>
+    <property name="data.dir" value="data/${dataset}"/>
 
     <!-- Temporary build directories -->
     <property name="build.dir" value="build"/>
@@ -37,17 +39,18 @@
                 <pathelement location="${lib.dir}/jdom.jar"/>
                 <pathelement location="${lib.dir}/log4j-1.2.15.jar"/>
             </classpath>
+            <arg value="${data.dir}/${dataset}.cfg"/>
         </java>
     </target>
 
     <target name="xslt" depends="run">
-        <xslt basedir="." destdir="." includes="tree.xml" extension=".html"
+        <xslt basedir="${data.dir}" destdir="${data.dir}" includes="tree.xml" extension=".html"
               style="${xsl.dir}/tree.xsl">
         </xslt>
     </target>
 
     <target name="xsltonly">
-        <xslt basedir="." destdir="." includes="tree.xml" extension=".html"
+        <xslt basedir="${data.dir}" destdir="${data.dir}" includes="tree.xml" extension=".html"
               style="${xsl.dir}/tree.xsl">
         </xslt>
     </target>
