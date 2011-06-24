@@ -6,6 +6,7 @@ import org.jdom.Element;
 import org.jdom.output.Format;
 import org.jdom.output.XMLOutputter;
 
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Set;
@@ -60,10 +61,10 @@ public class XmlUtil {
         }
     }
 
-    public static void saveXml(Document doc, String fileName) throws IOException {
+    public static void saveXml(Document doc, File file) throws IOException {
         FileWriter writer = null;
         try {
-            writer = new FileWriter(fileName);
+            writer = new FileWriter(file);
             outputter.output(doc, writer);
         } catch (IOException e) {
             log.error("Error saving xml", e);

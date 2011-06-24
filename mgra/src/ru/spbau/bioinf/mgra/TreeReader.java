@@ -26,7 +26,7 @@ public class TreeReader {
         Tree tree = new Tree(null, input.readLine());
         Document doc = new Document();
         doc.setRootElement(tree.toXml(cfg.getParentFile()));
-        XmlUtil.saveXml(doc, "tree.xml");
+        XmlUtil.saveXml(doc, new File(cfg.getParent(), "tree.xml"));
     }
 
     public static BufferedReader getBufferedInputReader(File file) throws FileNotFoundException {
