@@ -1,0 +1,9 @@
+# Genome 34
+
+# linear chromosome of length 2 follows:
++d -a $
+
+# linear chromosome of length 4 follows:
++f -e +b +c $
+
+# Reconstructed genome 34 has 2 chromosomes

@@ -1,0 +1,9 @@
+# Genome 2
+
+# linear chromosome of length 4 follows:
++d +e +b +c $
+
+# linear chromosome of length 2 follows:
++a +f $
+
+# Reconstructed genome 2 has 2 chromosomes

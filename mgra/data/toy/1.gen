@@ -1,0 +1,9 @@
+# Genome 1
+
+# linear chromosome of length 3 follows:
++b +c -a $
+
+# linear chromosome of length 3 follows:
++d +e +f $
+
+# Reconstructed genome 1 has 2 chromosomes

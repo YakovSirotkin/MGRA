@@ -1,0 +1,231 @@
+# Genome DCPW
+
+# linear chromosome of length 2 follows:
++144 -138 $
+
+# linear chromosome of length 2 follows:
++243 -230 $
+
+# linear chromosome of length 14 follows:
++26 -22 -21 -20 -19 -18 -17 -16 -15 -14 -13 -12 -11 -10 $
+
+# linear chromosome of length 4 follows:
++261 +262 +263 -258 $
+
+# linear chromosome of length 13 follows:
++69 +70 +71 +72 +73 +74 +75 +76 +77 +78 +79 +80 -68 $
+
+# linear chromosome of length 8 follows:
++99 +100 +101 +102 +103 +104 +105 +106 $
+
+# linear chromosome of length 7 follows:
++108 +109 +110 +111 +112 +113 +107 $
+
+# linear chromosome of length 24 follows:
++114 +115 +116 +117 +118 +119 +120 +121 +122 +123 +124 +125 +126 +127 +128 +129 +130 +131 +132 +133 +134 +135 +136 +137 $
+
+# linear chromosome of length 6 follows:
+-140 -139 -147 -146 -145 +148 $
+
+# linear chromosome of length 2 follows:
++141 +142 $
+
+# linear chromosome of length 1 follows:
++143 $
+
+# linear chromosome of length 3 follows:
++149 +150 +151 $
+
+# linear chromosome of length 1 follows:
++152 $
+
+# linear chromosome of length 1 follows:
++153 $
+
+# linear chromosome of length 2 follows:
++154 +155 $
+
+# linear chromosome of length 8 follows:
++156 +157 +158 +159 +160 +161 +162 +163 $
+
+# linear chromosome of length 5 follows:
++164 +165 +166 +167 +168 $
+
+# linear chromosome of length 5 follows:
++169 +170 +171 +172 +173 $
+
+# linear chromosome of length 1 follows:
++174 $
+
+# linear chromosome of length 5 follows:
++175 +176 +177 +178 +179 $
+
+# linear chromosome of length 2 follows:
++180 +181 $
+
+# linear chromosome of length 1 follows:
++182 $
+
+# linear chromosome of length 5 follows:
++183 +184 +185 +186 +187 $
+
+# linear chromosome of length 15 follows:
+-196 -195 -194 -193 -192 -191 -190 -189 -188 +197 +198 +199 +200 +201 +202 $
+
+# linear chromosome of length 2 follows:
++203 +204 $
+
+# linear chromosome of length 4 follows:
++205 +206 +207 +208 $
+
+# linear chromosome of length 2 follows:
++209 +210 $
+
+# linear chromosome of length 2 follows:
++211 +212 $
+
+# linear chromosome of length 1 follows:
++213 $
+
+# linear chromosome of length 1 follows:
++214 $
+
+# linear chromosome of length 3 follows:
++215 +216 +217 $
+
+# linear chromosome of length 2 follows:
++218 +219 $
+
+# linear chromosome of length 2 follows:
++220 +221 $
+
+# linear chromosome of length 8 follows:
++222 +223 +224 +225 +226 +227 +228 +229 $
+
+# linear chromosome of length 1 follows:
++23 $
+
+# linear chromosome of length 1 follows:
++24 $
+
+# linear chromosome of length 10 follows:
++231 +232 +233 +234 +235 +236 +237 +238 +239 +240 $
+
+# linear chromosome of length 2 follows:
++241 +242 $
+
+# linear chromosome of length 2 follows:
++244 +245 $
+
+# linear chromosome of length 1 follows:
++246 $
+
+# linear chromosome of length 1 follows:
++25 $
+
+# linear chromosome of length 6 follows:
+-250 -249 -248 -247 +283 +284 $
+
+# linear chromosome of length 2 follows:
++251 +252 $
+
+# linear chromosome of length 1 follows:
++253 $
+
+# linear chromosome of length 3 follows:
++254 +255 +256 $
+
+# linear chromosome of length 1 follows:
++257 $
+
+# linear chromosome of length 2 follows:
++259 +260 $
+
+# linear chromosome of length 4 follows:
++264 +265 +266 +267 $
+
+# linear chromosome of length 3 follows:
+-268 +269 +270 $
+
+# linear chromosome of length 6 follows:
++271 +272 +273 +274 +275 +276 $
+
+# linear chromosome of length 2 follows:
++27 +28 $
+
+# linear chromosome of length 6 follows:
++277 +278 +279 +280 +281 +282 $
+
+# linear chromosome of length 1 follows:
++285 $
+
+# linear chromosome of length 1 follows:
++286 $
+
+# linear chromosome of length 2 follows:
++287 +288 $
+
+# linear chromosome of length 3 follows:
+-290 -289 +67 $
+
+# linear chromosome of length 1 follows:
++291 $
+
+# linear chromosome of length 1 follows:
++292 $
+
+# linear chromosome of length 4 follows:
++293 +294 +295 +296 $
+
+# linear chromosome of length 11 follows:
++297 +298 +299 +300 +301 +302 +303 +304 +305 +306 +307 $
+
+# linear chromosome of length 5 follows:
++29 +30 +31 +32 +33 $
+
+# linear chromosome of length 8 follows:
++34 +35 +36 +37 +38 +39 +40 +41 $
+
+# linear chromosome of length 3 follows:
++42 +43 +44 $
+
+# linear chromosome of length 2 follows:
++45 +46 $
+
+# linear chromosome of length 3 follows:
++47 +48 +49 $
+
+# linear chromosome of length 7 follows:
++50 +51 +52 +53 +54 +55 +56 $
+
+# linear chromosome of length 1 follows:
++57 $
+
+# linear chromosome of length 2 follows:
++58 +59 $
+
+# linear chromosome of length 2 follows:
++60 +61 $
+
+# linear chromosome of length 5 follows:
++62 +63 +64 +65 +66 $
+
+# linear chromosome of length 2 follows:
++81 +82 $
+
+# linear chromosome of length 9 follows:
++1 +2 +3 +4 +5 +6 +7 +8 +9 $
+
+# linear chromosome of length 11 follows:
++83 +84 +85 +86 +87 +88 +89 +90 +91 +92 +93 $
+
+# linear chromosome of length 3 follows:
++94 +95 +96 $
+
+# linear chromosome of length 1 follows:
++97 $
+
+# linear chromosome of length 1 follows:
++98 $
+
+# Reconstructed genome DCPW has 76 chromosomes

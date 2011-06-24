@@ -1,4 +1,4 @@
-# Genome D.gen
+# Genome D
 
 # linear chromosome of length 26 follows:
 +286 -287 +288 -289 -249 -248 -247 -246 -245 -244 -243 -242 +239 -240 +241 -238 -237 -236 -235 -234 -233 -232 -231 -230 -229 -228 $
@@ -117,4 +117,4 @@
 # linear chromosome of length 28 follows:
 +76 +994 +995 +972 +973 +974 +975 +976 +977 +978 +979 +980 +981 +982 +984 -983 +985 +986 +987 +988 +989 +990 +991 +992 +993 +996 +997 +998 $
 
-# Reconstructed genome D.gen has 39 chromosomes
+# Reconstructed genome D has 39 chromosomes
