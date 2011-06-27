@@ -31,17 +31,17 @@ public class Tree {
         this.parent = parent;
         for (int i = 0;  i < s.length(); i++) {
              char ch = s.charAt(i);
-             if (Character.isLetter(ch)) {
+             if (Character.isLetterOrDigit(ch)) {
                  root += ch;
              }
         }
-        if (s.length() < 2)
+        if (s.length() == root.length())
             return;
         if (s.startsWith("(")) {
             s = s.substring(1, s.length() - 1);
         }
         int stat = 0;
-        int last = 0;
+        String cur = "";
         for (int i = 0;  i < s.length(); i++) {
             char ch = s.charAt(i);
             if (ch == '(') {
@@ -50,10 +50,19 @@ public class Tree {
             if (ch == ')') {
                 stat--;
             }
-            if (stat == 0 && ch != ',') {
-                children.add(new Tree(this, s.substring(last, i+1)));
-                last = i+2;
+
+            if (stat == 0) {
+                if (ch == ',') {
+                    children.add(new Tree(this, cur));
+                    cur = "";
+                }
             }
+            if (cur.length() > 0 || ch != ',') {
+                cur += ch;
+            }
+        }
+        if (cur.length() > 0) {
+            children.add(new Tree(this, cur));
         }
     }
 
