@@ -1,6 +1,7 @@
 package ru.spbau.bioinf.mgra;
 
 import org.jdom.Document;
+import org.jdom.Element;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -22,10 +23,14 @@ public class TreeReader {
     public TreeReader(File cfg) throws IOException{
         BufferedReader input = getBufferedInputReader(cfg);
         String s;
-        while (!(s = input.readLine()).startsWith("[Trees]")) {}
-        Tree tree = new Tree(null, input.readLine());
+        while (!input.readLine().startsWith("[Trees]")) {}
         Document doc = new Document();
-        doc.setRootElement(tree.toXml(cfg.getParentFile()));
+        Element root = new Element("trees");
+        doc.setRootElement(root);
+        while ((s = input.readLine().trim()).length() > 0) {
+            Tree tree = new Tree(null, s);
+            root.addContent(tree.toXml(cfg.getParentFile()));
+        }
         XmlUtil.saveXml(doc, new File(cfg.getParent(), "tree.xml"));
     }
 

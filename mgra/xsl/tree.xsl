@@ -2,7 +2,9 @@
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0">
     <xsl:output encoding="UTF-8" method="html" omit-xml-declaration="yes" indent="yes"/>
 
-    <xsl:template match="tree">
+
+
+    <xsl:template match="trees">
         <html>
             <title>MGRA tree</title>
             <style type="text/css">
@@ -14,7 +16,7 @@
 
             <script>
                 var values =  [
-                    <xsl:apply-templates select="row/cell/text"/>
+                    <xsl:apply-templates select="tree/row/cell/text"/>
                 ]
 
                 function showData(show) {
@@ -34,13 +36,18 @@
             </script>
             <body>
                 <h2>MGRA tree</h2>
-                <table border="1" cellpadding="10">
-                    <xsl:apply-templates select="row"/>
-                </table>
-                <xsl:apply-templates select="row/cell/transformations"/>
-                <xsl:apply-templates select="row/cell/genome"/>
+                <xsl:apply-templates select="tree"/>
+                <xsl:apply-templates select="tree/row/cell/transformations"/>
+                <xsl:apply-templates select="tree/row/cell/genome"/>
             </body>
         </html>
+    </xsl:template>
+
+    <xsl:template match="tree">
+        <table border="1" cellpadding="10">
+            <xsl:apply-templates select="row"/>
+        </table>
+        <br/>
     </xsl:template>
 
     <xsl:template match="row">
