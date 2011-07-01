@@ -7,16 +7,16 @@ import java.util.List;
 
 public class Gene {
 
-    private int id;
+    private String id;
     private Direction direction;
     private List<End> ends = new LinkedList<End>();
 
-    public Gene(int id, Direction direction) {
+    public Gene(String id, Direction direction) {
         this.id = id;
         this.direction = direction;
     }
 
-    public int getId() {
+    public String getId() {
         return id;
     }
 

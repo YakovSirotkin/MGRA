@@ -16,7 +16,7 @@ public class Chromosome {
         String[] data = s.split(" ");
         for (String v : data) {
            if (!v.startsWith("$")) {
-               Gene gene = new Gene(Integer.parseInt(v.substring(1)), Direction.getDirection(v.charAt(0)));
+               Gene gene = new Gene(v.substring(1), Direction.getDirection(v.charAt(0)));
                genes.add(gene);
            }
         }
@@ -24,7 +24,7 @@ public class Chromosome {
 
     public boolean contains(End end) {
         for (Gene gene : genes) {
-            if (gene.getId() == end.getId()) {
+            if (gene.getId().equals(end.getId())) {
                 return true;
             }
         }
@@ -33,7 +33,7 @@ public class Chromosome {
 
     public void mark(End end) {
         for (Gene gene : genes) {
-            if (gene.getId() == end.getId()) {
+            if (gene.getId().equals(end.getId())) {
                 gene.addEnd(end);
             }
         }
