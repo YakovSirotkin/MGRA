@@ -8,10 +8,10 @@
         <html>
             <title>MGRA tree</title>
             <style type="text/css">
-                .end0{color:red}
-                .end1{color:green}
-                .end2{color:magenta}
-                .end3{color:orange}
+                .end0{color:green}
+                .end1{color:red}
+                .end2{color:lime}
+                .end3{color:maroon}
             </style>
 
             <script>
@@ -92,13 +92,6 @@
         <br/>
     </xsl:template>
 
-    <xsl:template match="end">
-        <span class="end{color}">
-            <xsl:value-of select="id"/><xsl:value-of select="type"/>&#160;
-        </span>
-    </xsl:template>
-
-
     <xsl:template match="genome">
         <div id="gen{../text}" style="display:none;">
             <h3>Chromosomes for <xsl:value-of select="../text"/></h3>
@@ -112,14 +105,36 @@
     </xsl:template>
 
     <xsl:template match="gene">
+        <xsl:apply-templates select="end" mode="prefix"/>
         <a href="#{id}" title="{id}">
-            <xsl:if test="end">
-                <xsl:attribute name="class">end<xsl:value-of select="end/color"/></xsl:attribute>
-            </xsl:if>
             <xsl:choose>
                 <xsl:when test="direction='minus'">&lt;</xsl:when>
                 <xsl:otherwise>&gt;</xsl:otherwise>
             </xsl:choose>
         </a>
+        <xsl:apply-templates select="end" mode="suffix"/>
     </xsl:template>
+
+    <xsl:template match="end">
+        <span class="end{color}">
+            <xsl:value-of select="id"/><xsl:value-of select="type"/>&#160;
+        </span>
+    </xsl:template>
+
+    <xsl:template match="end" mode="prefix">
+        <xsl:if test="((../direction ='plus') and(type='t')) or ((../direction ='minus') and(type='h'))">
+            &#160;<xsl:apply-templates select="." mode="show"/>
+        </xsl:if>
+    </xsl:template>
+
+    <xsl:template match="end" mode="suffix">
+        <xsl:if test="((../direction ='plus') and(type='h')) or ((../direction ='minus') and(type='t'))">
+            <xsl:apply-templates select="." mode="show"/>&#160;
+        </xsl:if>
+    </xsl:template>
+
+    <xsl:template match="end" mode="show">
+        <span class="end{color}"><xsl:value-of select="type"/></span>
+    </xsl:template>
+
 </xsl:stylesheet>
