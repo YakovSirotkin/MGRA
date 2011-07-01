@@ -34,14 +34,14 @@ public class Chromosome {
     public void mark(End end) {
         for (Gene gene : genes) {
             if (gene.getId() == end.getId()) {
-                gene.setEnd(end);
+                gene.addEnd(end);
             }
         }
     }
 
     public void clearEnds() {
         for (Gene gene : genes) {
-            gene.clearEnd();
+            gene.clearEnds();
         }
     }
 
