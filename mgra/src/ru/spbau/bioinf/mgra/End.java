@@ -25,6 +25,14 @@ public class End {
         return id;
     }
 
+    public int getColor() {
+        return color;
+    }
+
+    public EndType getType() {
+        return type;
+    }
+
     public Element toXml() {
         Element end = new Element("end");
         XmlUtil.addElement(end, "id", id);
