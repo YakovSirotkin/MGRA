@@ -2,14 +2,24 @@ package ru.spbau.bioinf.mgra;
 
 import org.jdom.Element;
 
-import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 public class Chromosome {
 
     private int id;
 
-    private List<Gene> genes = new ArrayList<Gene>();
+    private List<Gene> genes = new LinkedList<Gene>();
+
+    public List<Gene> getGenes() {
+        return genes;
+    }
+
+
+    public Chromosome(int id, List<Gene> genes) {
+        this.id = id;
+        this.genes = genes;
+    }
 
     public Chromosome(int id, String s) {
         this.id = id;
