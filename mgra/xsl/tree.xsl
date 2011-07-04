@@ -85,10 +85,14 @@
     </xsl:template>
 
     <xsl:template match="transformation">
-        <xsl:apply-templates select="before/chromosome"/>
+        <xsl:apply-templates select="before/chromosome">
+            <xsl:sort select="id"/>
+        </xsl:apply-templates>
         <xsl:apply-templates select="end"/>
         <br/>
-        <xsl:apply-templates select="after/chromosome"/>
+        <xsl:apply-templates select="after/chromosome">
+            <xsl:sort select="id"/>
+        </xsl:apply-templates>
         <br/>
     </xsl:template>
 
