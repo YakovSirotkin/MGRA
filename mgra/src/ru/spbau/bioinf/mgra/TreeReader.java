@@ -13,7 +13,7 @@ import java.io.InputStreamReader;
 public class TreeReader {
 
     public static void main(String[] args) throws Exception {
-        String fileName = "data/mam6.cfg";
+        String fileName = "data/mam6/mam6.cfg";
         if (args.length > 0) {
             fileName = args[0];
         }
