@@ -28,6 +28,15 @@ public class Gene {
         ends.clear();
     }
 
+    public void addPositions(List<Position> positions, int pos) {
+        for (End end : ends) {
+            positions.add(new Position(pos, direction.getSide(end.getType()), end.getColor()));
+        }
+    }
+
+    public void reverse() {
+        direction = direction.reverse();
+    }
     public Element toXml() {
         Element gene = new Element("gene");
         XmlUtil.addElement(gene, "id", id);
