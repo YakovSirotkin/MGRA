@@ -28,10 +28,25 @@ public class Gene {
         ends.clear();
     }
 
-    public void addPositions(List<Position> positions, int pos) {
+    public int getSide(End end) {
+        return getDirection().getSide(end);
+    }
+
+    public End getEnd(int side) {
         for (End end : ends) {
-            positions.add(new Position(pos, direction.getSide(end.getType()), end.getColor()));
+            if (getSide(end) == side) {
+                return end;
+            }
         }
+        return null;
+    }
+
+    public List<End> getEnds() {
+        return ends;
+    }
+
+    public Direction getDirection() {
+        return direction;
     }
 
     public void reverse() {

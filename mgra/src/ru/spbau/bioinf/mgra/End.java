@@ -25,10 +25,9 @@ public class End {
         return id;
     }
 
-    public int getColor() {
-        return color;
+    public int getColorType() {
+        return color % 2;
     }
-
     public EndType getType() {
         return type;
     }

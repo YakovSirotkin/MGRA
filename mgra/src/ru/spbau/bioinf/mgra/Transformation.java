@@ -1,10 +1,7 @@
 package ru.spbau.bioinf.mgra;
 
 import org.jdom.Element;
-
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.LinkedList;
 import java.util.List;
 
 public class Transformation {
@@ -23,14 +20,18 @@ public class Transformation {
 
     public void update(Genome genome) {
         List<Chromosome> all = genome.getChromosomes();
-        for (Chromosome chromosome : all) {
+        List<Integer> ids = new ArrayList<Integer>();
+        for (int i = 0; i < all.size(); i++) {
+            Chromosome chromosome =  all.get(i);
             for (End end : ends) {
                 if (chromosome.contains(end)) {
                     this.chromosomes.add(chromosome);
+                    ids.add(i);
                     break;
                 }
             }
         }
+
         for (Chromosome chromosome : chromosomes) {
             chromosome.clearEnds();
             for (End end : ends) {
@@ -38,55 +39,49 @@ public class Transformation {
             }
             before.addContent(chromosome.toXml());
         }
-        if (chromosomes.size() ==1) {
-            Chromosome chr = chromosomes.get(0);
-            List<Gene> genes = chr.getGenes();
-            LinkedList<Position> positions = new LinkedList<Position>();
-            for (int i = 0; i < genes.size(); i++) {
-                Gene gene = genes.get(i);
-                gene.addPositions(positions, i);
-            }
-            Collections.sort(positions);
-            Position first = positions.getFirst();
-            if (first.getPos() == 0 && first.getSide() == -1) {
-                positions.addFirst(new Position(-1,1, 0));
-            }
-            if (positions.size() > 2) {
-                reverseOrFision(all, genes, positions);
-                after.addContent(chr.toXml());
-            }
-            chr.clearEnds();
-        }
-    }
 
-    private void reverseOrFision(List<Chromosome> all, List<Gene> genes, LinkedList<Position> positions) {
-        Position left = positions.get(1);
-        Position right = positions.get(2);
-
-        int start = left.getPos();
-        int end = right.getPos();
-        if (left.getColor() % 2 != right.getColor() %2) {
-            List<Gene> reverse = new ArrayList<Gene>();
-            for (int pos = end; pos >=start; pos--) {
-                Gene gene = genes.get(pos);
-                gene.reverse();
-                reverse.add(gene);
-                genes.remove(pos);
-            }
-            for (int i = 0; i < reverse.size(); i++) {
-                genes.add(start + i, reverse.get(i));
-            }
-        } else {
-            List<Gene> cut = new ArrayList<Gene>();
-            for (int pos = start; pos <=end; pos++) {
-                cut.add(genes.get(start));
-                genes.remove(start);
-            }
-            Chromosome add = new Chromosome(all.size() + 1, cut);
-            all.add(add);
-            after.addContent(add.toXml());
-            add.clearEnds();
+        List<Chromosome> parts = new ArrayList<Chromosome>();
+        for (Chromosome chromosome : chromosomes) {
+            chromosome.split(parts);
         }
+
+        for (int i = 0; i < parts.size(); i++) {
+            Chromosome first = parts.get(i);
+            for (int j = i+1; j < parts.size(); j++) {
+                Chromosome second = parts.get(j);
+                if (first.join(second)) {
+                    parts.remove(j);
+                    j = i;
+                }
+            }
+        }
+
+        int order = 0;
+        while (parts.size() > order && ids.size() > order) {
+            Chromosome chr = parts.get(order);
+            int id = ids.get(order);
+            chr.setId(id + 1);
+            all.remove(id);
+            all.add(id, chr);
+            order++;
+        }
+        if (parts.size() > order) {
+            Chromosome chr = parts.get(order);
+            chr.setId(all.size() +1);
+            all.add(chr);
+        }
+        if (ids.size() > order) {
+            int id = ids.get(order);
+            all.remove(id);
+        }
+
+        for (Chromosome chromosome : parts) {
+             chromosome.clearEnds();
+             for (End end : ends) {
+                 chromosome.mark(end);
+             }
+             after.addContent(chromosome.toXml());
+         }
     }
 
     public Element toXml() {
