@@ -35,6 +35,10 @@ public enum Direction {
     }
 
     abstract int getSide(EndType endType);
+
+    public int getSide(End end) {
+        return getSide(end.getType());
+    }
     abstract Direction reverse();
 
     @Override
