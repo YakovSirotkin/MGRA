@@ -246,14 +246,8 @@ public class JettyServer {
         Process process = Runtime.getRuntime().exec(
                 command,
                 new String[]{}, datasetDir);
-        BufferedReader input =
-                new BufferedReader
-                        (new InputStreamReader(process.getInputStream()));
-        String line;
-        while ((line = input.readLine()) != null) {
-            log.debug("MGRA output : " + line);
-        }
-        input.close();
+        Thread outputThread = listenOutput(process.getInputStream(), "output");
+        Thread errorThread = listenOutput(process.getErrorStream(), "error output");
 
         do {
             try {
@@ -264,6 +258,9 @@ public class JettyServer {
                 e.printStackTrace();
             }
         } while (true);
+
+        outputThread.interrupt();
+        errorThread.interrupt();
 
         new TreeReader(new File(datasetDir, CFG_FILE_NAME));
 
@@ -279,6 +276,34 @@ public class JettyServer {
 
         return datasetDir.getName() + "/tree.html";
 
+    }
+
+    private static Thread listenOutput(InputStream inputStream, final String type) {
+        final BufferedReader input =
+                new BufferedReader
+                        (new InputStreamReader(inputStream));
+
+
+        Thread outputThread = new Thread(new Runnable() {
+            public void run() {
+                String line;
+                try {
+                    while ((line = input.readLine()) != null) {
+                        log.debug("MGRA " + type + " : " + line);
+                    }
+                } catch (IOException e) {
+                    log.error("Error reading MGRA " + type, e);
+                } finally {
+                    try {
+                        input.close();
+                    } catch (IOException e) {
+                        log.error("Error closing MGRA " + type, e);
+                    }
+                }
+            }
+        });
+        outputThread.start();
+        return outputThread;
     }
 
     private static PrintWriter createOutput(File datasetDir, String file) throws UnsupportedEncodingException, FileNotFoundException {
