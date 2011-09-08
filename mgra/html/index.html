@@ -84,6 +84,14 @@ div.mgrtree pre {
                                                             '81t 83h 80h 84t Q\r'+
                                                             '794h 795t 795h 796t Q\r'+
                                                             '1196h 1198h 1202t 1199t D\r';
+            showTarget(true);
+        }
+
+        function showTarget(show) {
+            document.getElementById('targetDiv').style.display= show ? '' : 'none';
+            document.getElementById('targetControl').style.display=show ? 'none' : '';
+            document.getElementById('useTarget').value=show ? 1 : 0;
+            return false;
         }
     </script>
 </head>
@@ -103,11 +111,6 @@ div.mgrtree pre {
     <p><a href="#" onclick="addGenome(); return false;">Add genome</a></p>
 
     <p>
-        <strong>Given genomes aliases: multiple aliases possible, first alias must be a single unique letter</strong>
-    </p>
-
-
-    <p>
         <strong>Known subtrees of the phylogenetic tree of the above genomes in Newick format</strong><br>
         If no trees are given, MGRA assumes that only terminal branches are known (as in MGR).
     </p>
@@ -121,6 +124,14 @@ div.mgrtree pre {
         It is not recommended to have stages higher than 3 if no complete phylogenetic tree is known.
     </p>
 
+        <div id="targetControl">
+            <a href="#" onclick="return showTarget(true);">Show Target and Completion fields</a>
+        </div>
+
+        <div id="targetDiv" style="display:none;">
+    <p>
+        <a href="#" onclick="return showTarget(false);">Remove Target and Completion fields</a>
+    </p>
     <p>
         <strong>Target</strong>&nbsp;&nbsp;&nbsp;<input type='text' size='10' name='target' id="target"/><br>
         By default, MGRA reconstructs all ancestral genomes but it first has to complete transformation into an identity breakpoint graph.
@@ -137,14 +148,17 @@ div.mgrtree pre {
         Manual completion can be derived from visual inspection of the breakpoint graph after MGRA Stage 3.
     </p>
     <textarea rows="6" cols="50" name="completion" id="completion"></textarea>
+            </div>
+    <input type="hidden" name="useTarget" id="useTarget" value="0"/>
     <p>
         <input type="submit" value="Submit form"/>
     </p>
+
     </form>
 
 
     <form name="hidden">
-    <div style="visibility:hidden;">
+    <div style="display:none;">
         <textarea id="mam6">
 # Synteny blocks for 6 mammalian species, constructed by Jian Ma from the following builds:
 # hg18 (Mar 2006)
