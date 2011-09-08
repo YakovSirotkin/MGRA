@@ -60,6 +60,7 @@ public class JettyServer {
     private static final Processor processor = new Processor(false);
     private static final XsltCompiler comp = processor.newXsltCompiler();
     private static XsltTransformer xslt;
+    private static final String GENOME_FILE = "genome.txt";
 
     static {
         try {
@@ -180,7 +181,7 @@ public class JettyServer {
             datasetDir = new File(uploadDir, dir);
         } while (datasetDir.exists());
         datasetDir.mkdirs();
-        PrintWriter genomeFile = createOutput(datasetDir, "genome.txt");
+        PrintWriter genomeFile = createOutput(datasetDir, GENOME_FILE);
         int genomeId = 1;
         String key = "genome" + genomeId;
         do {
@@ -202,7 +203,7 @@ public class JettyServer {
         } while (properties.containsKey(key));
 
         cfgFile.println("[Blocks]");
-        cfgFile.println("format infercars");
+        cfgFile.println("format " + getFormat(new File(datasetDir, GENOME_FILE)));
         cfgFile.println("file genome.txt");
 
         cfgFile.println();
@@ -277,6 +278,31 @@ public class JettyServer {
         return datasetDir.getName() + "/tree.html";
 
     }
+
+
+    private static String getFormat(File genome) throws  IOException {
+        BufferedReader reader = TreeReader.getBufferedInputReader(genome);
+        String s;
+        int infercars = 0;
+        int grimm = 0;
+        while ((s = reader.readLine())!=null) {
+             s = s.trim();
+             if (!s.startsWith("#") && s.length() > 0) {
+                 if (s.endsWith("+") || s.endsWith("-")) {
+                     infercars++;
+                 } else {
+                     if (s.endsWith("$")) {
+                         grimm++;
+                     }
+                 }
+            }
+        }
+
+        String ans = infercars > grimm ? "infercars" : "grimm";
+        log.debug("Genome format detection: " + infercars + " for infercars " + grimm + " for grimm, answer - " + ans);
+        return ans;
+    }
+
 
     private static Thread listenOutput(InputStream inputStream, final String type) {
         final BufferedReader input =
