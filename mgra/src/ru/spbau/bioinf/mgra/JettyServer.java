@@ -217,8 +217,12 @@ public class JettyServer {
         cfgFile.println("stages " + properties.getProperty("stages"));
         cfgFile.println();
 
-        cfgFile.println("target " + properties.getProperty("target"));
-        cfgFile.println();
+        boolean useTarget = "1".equals(properties.getProperty("useTarget"));
+
+        if (useTarget) {
+            cfgFile.println("target " + properties.getProperty("target"));
+            cfgFile.println();
+        }
 
         cfgFile.println("[Graphs]");
         cfgFile.println();
@@ -229,9 +233,11 @@ public class JettyServer {
         cfgFile.println("colorscheme set19");
         cfgFile.println();
 
-        cfgFile.println("[Completion]");
-        cfgFile.println(properties.getProperty("completion"));
-        cfgFile.println();
+        if (useTarget) {
+            cfgFile.println("[Completion]");
+            cfgFile.println(properties.getProperty("completion"));
+            cfgFile.println();
+        }
 
         cfgFile.close();
 
