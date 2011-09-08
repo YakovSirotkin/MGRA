@@ -196,7 +196,7 @@ public class JettyServer {
         int aliasId = 1;
         key = "alias" + aliasId;
         do {
-            cfgFile.println(properties.get(key));
+            cfgFile.println(properties.get("name" + aliasId) + " " +  properties.get(key));
             aliasId++;
             key = "alias" + aliasId;
         } while (properties.containsKey(key));

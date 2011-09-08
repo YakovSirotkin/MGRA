@@ -33,43 +33,46 @@ div.mgrtree pre {
             row.align = "left";
             row.vAlign = "top";
             var c = [];
-            for (var j = 0; 2 > j; j++) {
-                c[j] = row.insertCell(j);
-                c[j].align = "left";
-                c[j].vAlign = "top";
-            }
-
-            c[0].innerHTML = "<strong>Genome " + genomeCount + "</strong>";
-            c[1].innerHTML = "<textarea id='genome" + genomeCount + "' name='genome" + genomeCount + "' rows='4' cols='60'></textarea>";
-        }
-
-        var aliasesCount = 0;
-
-        function addAlias() {
-            aliasesCount++;
-            var table = document.getElementById("aliases");
-            var row = table.insertRow(aliasesCount - 1);
-            row.align = "left";
-            row.vAlign = "top";
-            var c = [];
             for (var j = 0; 1 > j; j++) {
                 c[j] = row.insertCell(j);
                 c[j].align = "left";
                 c[j].vAlign = "top";
             }
 
-            c[0].innerHTML = "<input type='text' size='30'" + " id='alias" + aliasesCount + "' name='alias" + aliasesCount + "'/>";
+            c[0].innerHTML =
+                "<div><strong>Genome " + genomeCount + "</strong></div>" +
+                "<div>Name: <input size='1' id='name" + genomeCount + "' name='name" + genomeCount + "'> Aliases <input id='alias" + genomeCount + "'size='25' name='alias" + genomeCount + "'></div>"+
+                "<textarea id='genome" + genomeCount + "' name='genome" + genomeCount + "' rows='4' cols='60'></textarea>";
         }
 
 
+        function clearGenomes() {
+            var table = document.getElementById("genomes");
+            for(var i = table.rows.length - 1; i >= 0; i--) {
+                table.deleteRow(i);
+            }
+            genomeCount = 0;
+        }
+
         function setMam6() {
+            clearGenomes();
+            for (var i = 0; i < 6; i++) {
+                addGenome();
+            }
             document.getElementById("genome1").value = document.getElementById("mam6").value;
-            document.getElementById("alias1").value = 'M mouse mm9';
-            document.getElementById("alias2").value = 'R rat rn4';
-            document.getElementById("alias3").value = 'D dog canFam2';
-            document.getElementById("alias4").value = 'Q macaque rheMac2';
-            document.getElementById("alias5").value = 'H human hg18';
-            document.getElementById("alias6").value = 'C chimpanzee panTro2';
+            document.getElementById("name1").value = 'M';
+            document.getElementById("name2").value = 'R';
+            document.getElementById("name3").value = 'D';
+            document.getElementById("name4").value = 'Q';
+            document.getElementById("name5").value = 'H';
+            document.getElementById("name6").value = 'C';
+
+            document.getElementById("alias1").value = 'mouse mm9';
+            document.getElementById("alias2").value = 'rat rn4';
+            document.getElementById("alias3").value = 'dog canFam2';
+            document.getElementById("alias4").value = 'macaque rheMac2';
+            document.getElementById("alias5").value = 'human hg18';
+            document.getElementById("alias6").value = 'chimpanzee panTro2';
             document.getElementById("trees").value = '(((M,R),D),(Q,(H,C)))';
             document.getElementById("stages").value = '4';
             document.getElementById("target").value = '';
@@ -103,18 +106,6 @@ div.mgrtree pre {
         <strong>Given genomes aliases: multiple aliases possible, first alias must be a single unique letter</strong>
     </p>
 
-    <table id="aliases">
-    </table>
-    <script>
-        addAlias();
-        addAlias();
-        addAlias();
-        addAlias();
-        addAlias();
-        addAlias();
-    </script>
-
-    <p><a href="#" onclick="addAlias(); return false;">Add genome alias</a></p>
 
     <p>
         <strong>Known subtrees of the phylogenetic tree of the above genomes in Newick format</strong><br>
