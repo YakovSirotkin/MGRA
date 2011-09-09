@@ -38,9 +38,11 @@ import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Calendar;
 import java.util.Enumeration;
 import java.util.Properties;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class JettyServer {
 
@@ -62,12 +64,36 @@ public class JettyServer {
     private static XsltTransformer xslt;
     private static final String GENOME_FILE = "genome.txt";
 
+    private static File dateDir;
+
+    private static AtomicInteger requestId;
+
+    private static int currentDay = -1;
+
     static {
         try {
             xslt = comp.compile(new StreamSource(
                     new InputStreamReader(new FileInputStream(new File(xslDir, "tree.xsl")), "UTF-8"))).load();
         } catch (Throwable e) {
             log.error("Error initializing xslt", e);
+        }
+        updateDateDir();
+    }
+
+    private static synchronized void updateDateDir() {
+        Calendar calendar = Calendar.getInstance();
+        int day = calendar.get(Calendar.DAY_OF_MONTH);
+        if (day != currentDay) {
+            dateDir = new File(new File(new File(uploadDir, Integer.toString(calendar.get(Calendar.YEAR))),
+                        Integer.toString(calendar.get(Calendar.MONTH))),
+                        Integer.toString(day));
+            currentDay = day;
+            if (dateDir.exists()) {
+               requestId = new AtomicInteger(dateDir.list().length);
+           } else {
+               dateDir.mkdirs();
+               requestId = new AtomicInteger(0);
+           }
         }
     }
 
@@ -111,9 +137,10 @@ public class JettyServer {
             public void handle(String target, Request baseRequest, HttpServletRequest request, HttpServletResponse response)
                     throws IOException, ServletException {
                 String path = request.getPathInfo();
-                if (path.startsWith("/file/request")) {
-                    File file = new File(uploadDir, path.substring("/file".length()));
-                    if (uploadDir.equals(file.getParentFile().getParentFile())) {
+                if (path.startsWith("/file/")) {
+                    path = path.substring("/file".length());
+                    File file = new File(uploadDir, path);
+                    if (file.getCanonicalPath().startsWith(uploadDir.getCanonicalPath())) {
                         ServletOutputStream out = response.getOutputStream();
                         FileInputStream in = new FileInputStream(file);
 
@@ -175,12 +202,12 @@ public class JettyServer {
         server.start();
     }
 
-    private static synchronized String processRequest(Properties properties, File genomeFileUpload) throws Exception {
+    private static String processRequest(Properties properties, File genomeFileUpload) throws Exception {
         File datasetDir;
-        int id = uploadDir.listFiles().length;
+        updateDateDir();
         do {
-            String dir = "request" + id;
-            datasetDir = new File(uploadDir, dir);
+            String dir = "request" + requestId.getAndIncrement();
+            datasetDir = new File(dateDir, dir);
         } while (datasetDir.exists());
         datasetDir.mkdirs();
 
@@ -284,7 +311,13 @@ public class JettyServer {
         xslt.setDestination(out);
         xslt.transform();
 
-        return datasetDir.getName() + "/tree.html";
+        String path = datasetDir.getCanonicalPath();
+        path = path.replaceAll("\\\\","/");
+        int cur = path.length();
+        for (int i = 0; i < 4; i++) {
+            cur = path.lastIndexOf("/", cur - 1);
+        }
+        return path.substring(cur + 1) + "/tree.html";
 
     }
 
