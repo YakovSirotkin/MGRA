@@ -128,13 +128,16 @@ public class JettyServer {
                     return;
                 }
                 final Properties properties = new Properties();
-                final File[] files = new File[2];
+                final File[] files = new File[1];
                 try {
                     uploadFilter.doFilter(request, response, new FilterChain() {
                         public void doFilter(ServletRequest wrapper, ServletResponse servletResponse) throws IOException, ServletException {
                             Enumeration uploads = wrapper.getAttributeNames();
                             while (uploads.hasMoreElements()) {
                                 String fileField = (String) uploads.nextElement();
+                                if ("genome".equals(fileField)) {
+                                    files[0] = (File)wrapper.getAttribute(fileField);
+                                }
                             }
                             Enumeration parameters = wrapper.getParameterNames();
                             while (parameters.hasMoreElements()) {
@@ -149,8 +152,7 @@ public class JettyServer {
                         }
                     });
                     //response.setContentType("text/html");
-                    String fileUrl = processRequest(properties, files);
-                    //fileUrl = "http://www.yandex.ru/";
+                    String fileUrl = processRequest(properties, files[0]);
                     response.sendRedirect("file/" + fileUrl);
 
                     //response.setStatus(HttpServletResponse.SC_OK);
@@ -173,7 +175,7 @@ public class JettyServer {
         server.start();
     }
 
-    private static synchronized String processRequest(Properties properties, File[] files) throws Exception {
+    private static synchronized String processRequest(Properties properties, File genomeFileUpload) throws Exception {
         File datasetDir;
         int id = uploadDir.listFiles().length;
         do {
@@ -181,16 +183,23 @@ public class JettyServer {
             datasetDir = new File(uploadDir, dir);
         } while (datasetDir.exists());
         datasetDir.mkdirs();
-        PrintWriter genomeFile = createOutput(datasetDir, GENOME_FILE);
-        int genomeId = 1;
-        String key = "genome" + genomeId;
-        do {
-            genomeFile.println(properties.get(key));
-            genomeId++;
-            genomeFile.println();
+
+        String key;
+
+        if (genomeFileUpload != null) {
+            genomeFileUpload.renameTo(new File(datasetDir, GENOME_FILE));
+        } else {
+            PrintWriter genomeFile = createOutput(datasetDir, GENOME_FILE);
+            int genomeId = 1;
             key = "genome" + genomeId;
-        } while (properties.containsKey(key));
-        genomeFile.close();
+            do {
+                genomeFile.println(properties.get(key));
+                genomeId++;
+                genomeFile.println();
+                key = "genome" + genomeId;
+            } while (properties.containsKey(key));
+            genomeFile.close();
+        }
         PrintWriter cfgFile = createOutput(datasetDir, CFG_FILE_NAME);
         cfgFile.println("[Genomes]");
 
@@ -431,11 +440,9 @@ public class JettyServer {
         }
 
         public void setAttribute(String s, Object o) {
-
         }
 
         public void removeAttribute(String s) {
-
         }
 
         public String getServletContextName() {
