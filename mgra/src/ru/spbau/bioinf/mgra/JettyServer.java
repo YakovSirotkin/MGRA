@@ -85,7 +85,7 @@ public class JettyServer {
         int day = calendar.get(Calendar.DAY_OF_MONTH);
         if (day != currentDay) {
             dateDir = new File(new File(new File(uploadDir, Integer.toString(calendar.get(Calendar.YEAR))),
-                        Integer.toString(calendar.get(Calendar.MONTH))),
+                        Integer.toString(calendar.get(Calendar.MONTH) + 1)),
                         Integer.toString(day));
             currentDay = day;
             if (dateDir.exists()) {
