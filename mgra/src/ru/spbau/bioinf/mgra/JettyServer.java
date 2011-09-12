@@ -7,6 +7,7 @@ import net.sf.saxon.s9api.XdmNode;
 import net.sf.saxon.s9api.XsltCompiler;
 import net.sf.saxon.s9api.XsltTransformer;
 import org.apache.log4j.Logger;
+import org.eclipse.jetty.server.Connector;
 import org.eclipse.jetty.server.Handler;
 import org.eclipse.jetty.server.Request;
 import org.eclipse.jetty.server.Server;
@@ -197,6 +198,9 @@ public class JettyServer {
             }
         };
         Server server = new Server(port);
+        for (Connector connector : server.getConnectors()) {
+            connector.setMaxIdleTime(2000000);
+        }
         server.setHandler(handler);
         server.start();
     }
