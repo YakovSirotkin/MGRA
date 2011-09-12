@@ -156,6 +156,7 @@ public class JettyServer {
                 }
                 final Properties properties = new Properties();
                 final File[] files = new File[1];
+                PrintWriter out = response.getWriter();
                 try {
                     uploadFilter.doFilter(request, response, new FilterChain() {
                         public void doFilter(ServletRequest wrapper, ServletResponse servletResponse) throws IOException, ServletException {
@@ -178,22 +179,20 @@ public class JettyServer {
                             }
                         }
                     });
-                    //response.setContentType("text/html");
-                    String fileUrl = processRequest(properties, files[0]);
-                    response.sendRedirect("file/" + fileUrl);
-
-                    //response.setStatus(HttpServletResponse.SC_OK);
-                    //((Request) request).setHandled(true);
+                    response.setContentType("text/html");
+                    processRequest(out, properties, files[0]);
+                    response.setStatus(HttpServletResponse.SC_OK);
+                    ((Request) request).setHandled(true);
                 } catch (Throwable e) {
-                    PrintWriter writer = response.getWriter();
                     log.error("Error processing request", e);
-                    e.printStackTrace(writer);
+                    e.printStackTrace(out);
                 } finally {
                     for (int i = 0; i < files.length; i++) {
                         File file = files[i];
                         if (file != null && file.exists())
                             file.delete();
                     }
+                    out.close();
                 }
             }
         };
@@ -202,7 +201,7 @@ public class JettyServer {
         server.start();
     }
 
-    private static String processRequest(Properties properties, File genomeFileUpload) throws Exception {
+    private static void processRequest(final PrintWriter out, Properties properties, File genomeFileUpload) throws Exception {
         File datasetDir;
         updateDateDir();
         do {
@@ -210,6 +209,20 @@ public class JettyServer {
             datasetDir = new File(dateDir, dir);
         } while (datasetDir.exists());
         datasetDir.mkdirs();
+
+        String path = datasetDir.getCanonicalPath();
+        path = path.replaceAll("\\\\","/");
+        int cur = path.length();
+        for (int i = 0; i < 4; i++) {
+            cur = path.lastIndexOf("/", cur - 1);
+        }
+        String treeLink = path.substring(cur + 1) + "/tree.html";
+
+
+        out.println("<html><title>MGRA processing information</title><body>");
+
+        out.println("<p>MGRA tree will appear <a href=\"file/" +treeLink + "\">here</a>.</p>");
+        response(out, "<pre>");
 
         String key;
 
@@ -283,8 +296,8 @@ public class JettyServer {
         Process process = Runtime.getRuntime().exec(
                 command,
                 new String[]{}, datasetDir);
-        Thread outputThread = listenOutput(process.getInputStream(), "output");
-        Thread errorThread = listenOutput(process.getErrorStream(), "error output");
+        Thread outputThread = listenOutput(process.getInputStream(), out, "output");
+        Thread errorThread = listenOutput(process.getErrorStream(), out, "error ");
 
         do {
             try {
@@ -299,26 +312,30 @@ public class JettyServer {
         outputThread.interrupt();
         errorThread.interrupt();
 
+        response(out, "Generating results XML...");
+
         new TreeReader(new File(datasetDir, CFG_FILE_NAME));
 
+        response(out, "Applying XSLT...");
+
         XdmNode source = getSource(processor, new File(datasetDir, "tree.xml"));
-        Serializer out = new Serializer();
-        out.setOutputProperty(Serializer.Property.METHOD, "html");
-        out.setOutputProperty(Serializer.Property.INDENT, "yes");
-        out.setOutputFile(new File(datasetDir, "tree.html"));
+        Serializer serializer = new Serializer();
+        serializer.setOutputProperty(Serializer.Property.METHOD, "html");
+        serializer.setOutputProperty(Serializer.Property.INDENT, "yes");
+        serializer.setOutputFile(new File(datasetDir, "tree.html"));
 
         xslt.setInitialContextNode(source);
-        xslt.setDestination(out);
+        xslt.setDestination(serializer);
         xslt.transform();
 
-        String path = datasetDir.getCanonicalPath();
-        path = path.replaceAll("\\\\","/");
-        int cur = path.length();
-        for (int i = 0; i < 4; i++) {
-            cur = path.lastIndexOf("/", cur - 1);
+        synchronized (out) {
+            out.println("Done.");
+            out.println("</pre>");
+            out.println("<p><a href=\"file/" +treeLink + "\">MGRA tree</a> Press this link if it doesn't works automatically.</p>");
+            out.println("<script>document.location.href='file/" + treeLink + "'</script>");
+            out.println("</body></html>");
+            out.flush();
         }
-        return path.substring(cur + 1) + "/tree.html";
-
     }
 
 
@@ -346,7 +363,7 @@ public class JettyServer {
     }
 
 
-    private static Thread listenOutput(InputStream inputStream, final String type) {
+    private static Thread listenOutput(InputStream inputStream, final PrintWriter out, final String type) {
         final BufferedReader input =
                 new BufferedReader
                         (new InputStreamReader(inputStream));
@@ -358,20 +375,36 @@ public class JettyServer {
                 try {
                     while ((line = input.readLine()) != null) {
                         log.debug("MGRA " + type + " : " + line);
+                        response(out, type + " : " + line);
                     }
                 } catch (IOException e) {
-                    log.error("Error reading MGRA " + type, e);
+                    logError(e, out, "Error reading MGRA " + type);
                 } finally {
                     try {
                         input.close();
                     } catch (IOException e) {
-                        log.error("Error closing MGRA " + type, e);
+                        logError(e, out, "Error closing MGRA " + type);
                     }
                 }
             }
         });
         outputThread.start();
         return outputThread;
+    }
+
+    private static void logError(IOException e, PrintWriter out, String message) {
+        log.error(message, e);
+        response(out, message);
+        synchronized (out) {
+            e.printStackTrace(out);
+        }
+    }
+
+    private static void response(PrintWriter out, String message) {
+        synchronized (out) {
+            out.println(message);
+            out.flush();
+        }
     }
 
     private static PrintWriter createOutput(File datasetDir, String file) throws UnsupportedEncodingException, FileNotFoundException {
