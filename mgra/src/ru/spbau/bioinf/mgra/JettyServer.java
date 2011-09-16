@@ -83,11 +83,6 @@ public class JettyServer {
         if (!exeFile.exists()) {
             exeFile = new File(execDir, "mgra.exe");
         }
-        try {
-            System.out.println("exeFile = " + exeFile.getCanonicalPath());
-        } catch (IOException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-        }
     }
 
     private static synchronized void updateDateDir() {
@@ -143,6 +138,7 @@ public class JettyServer {
                     throws IOException, ServletException {
                 String path = request.getPathInfo();
                 if (path.startsWith("/file/")) {
+                    log.debug("Handling request " + path);
                     path = path.substring("/file".length());
                     File file = new File(uploadDir, path);
                     if (file.getCanonicalPath().startsWith(uploadDir.getCanonicalPath())) {
@@ -157,6 +153,7 @@ public class JettyServer {
                         in.close();
                         out.close();
                     }
+                    log.debug(path + " request processed.");
                     return;
                 }
                 final Properties properties = new Properties();
@@ -317,8 +314,8 @@ public class JettyServer {
             }
         } while (true);
 
-        outputThread.interrupt();
-        errorThread.interrupt();
+        outputThread.join();
+        errorThread.join();
 
         response(out, "Generating results XML...");
 
