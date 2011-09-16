@@ -78,7 +78,6 @@ public class JettyServer {
         } catch (Throwable e) {
             log.error("Error initializing xslt", e);
         }
-        updateDateDir();
         exeFile = new File(execDir, "mgra.bin");
         if (!exeFile.exists()) {
             exeFile = new File(execDir, "mgra.exe");
@@ -103,9 +102,14 @@ public class JettyServer {
     }
 
     public static void main(String[] args) throws Exception {
+        if (args.length > 0) {
+            uploadDir = new File(args[0]);
+        }
 
-        if (args.length > 0)
+        if (args.length > 1)
             port = Integer.parseInt(args[1]);
+
+        updateDateDir();
 
         uploadDir.mkdirs();
 
@@ -226,7 +230,7 @@ public class JettyServer {
 
         out.println("<html><title>MGRA processing information</title><body>");
 
-        out.println("<p>MGRA tree will appear <a href=\"file/" +treeLink + "\">here</a>.</p>");
+        out.println("<p>MGRA tree will appear <a href=\"" +treeLink + "\">here</a>.</p>");
         response(out, "<pre>");
 
         String key;
@@ -336,8 +340,8 @@ public class JettyServer {
         synchronized (out) {
             out.println("Done.");
             out.println("</pre>");
-            out.println("<p><a href=\"file/" +treeLink + "\">MGRA tree</a> Press this link if it doesn't works automatically.</p>");
-            out.println("<script>document.location.href='file/" + treeLink + "'</script>");
+            out.println("<p><a href=\"" +treeLink + "\">MGRA tree</a> Press this link if it doesn't works automatically.</p>");
+            out.println("<script>document.location.href='" + treeLink + "'</script>");
             out.println("</body></html>");
             out.flush();
         }
