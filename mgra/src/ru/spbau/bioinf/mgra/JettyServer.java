@@ -54,10 +54,9 @@ public class JettyServer {
 
     private static File uploadDir = new File("upload");
 
-    private static String mgraExec = "exec";
     private static File xslDir = new File("xsl");
     private static int port = 8080;
-    private static File execDir;
+    private static File execDir = new File("exec");
 
     private static final String CFG_FILE_NAME = "mgra.cfg";
     private static final Processor processor = new Processor(false);
@@ -84,6 +83,11 @@ public class JettyServer {
         if (!exeFile.exists()) {
             exeFile = new File(execDir, "mgra.exe");
         }
+        try {
+            System.out.println("exeFile = " + exeFile.getCanonicalPath());
+        } catch (IOException e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+        }
     }
 
     private static synchronized void updateDateDir() {
@@ -106,9 +110,6 @@ public class JettyServer {
     public static void main(String[] args) throws Exception {
 
         if (args.length > 0)
-            mgraExec = args[0];
-
-        if (args.length > 1)
             port = Integer.parseInt(args[1]);
 
         uploadDir.mkdirs();
@@ -136,8 +137,6 @@ public class JettyServer {
             }
         };
         uploadFilter.init(config);
-
-        execDir = new File(mgraExec);
 
         Handler handler = new AbstractHandler() {
             public void handle(String target, Request baseRequest, HttpServletRequest request, HttpServletResponse response)
