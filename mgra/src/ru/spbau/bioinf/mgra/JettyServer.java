@@ -70,6 +70,7 @@ public class JettyServer {
     private static AtomicInteger requestId;
 
     private static int currentDay = -1;
+    private static File exeFile;
 
     static {
         try {
@@ -79,6 +80,10 @@ public class JettyServer {
             log.error("Error initializing xslt", e);
         }
         updateDateDir();
+        exeFile = new File(execDir, "mgra.bin");
+        if (!exeFile.exists()) {
+            exeFile = new File(execDir, "mgra.exe");
+        }
     }
 
     private static synchronized void updateDateDir() {
@@ -295,7 +300,7 @@ public class JettyServer {
 
         cfgFile.close();
 
-        String[] command = new String[]{new File(execDir, "mgra.exe").getAbsolutePath(), CFG_FILE_NAME};
+        String[] command = new String[]{exeFile.getAbsolutePath(), CFG_FILE_NAME};
 
         Process process = Runtime.getRuntime().exec(
                 command,
